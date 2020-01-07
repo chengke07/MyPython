@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-12-30 11:50:59
-@LastEditTime : 2019-12-30 13:57:41
+@LastEditTime : 2019-12-31 17:16:14
 @LastEditors  : Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \MyPython\tools_ex.py
@@ -12,8 +12,13 @@ import win32api
 import win32con
 import win32gui_struct
 import win32gui
+import PyHook3
+import pythoncom
+import _thread
+from tkinter import *
 
 Main = None
+
 
 class SysTrayIcon(object):
     QUIT = 'QUIT'
@@ -210,10 +215,29 @@ class SysTrayIcon(object):
         else:
             menu_action(s)
 
+
 class _Main:
     def main(s):
-        import tkinter as tk
-        s.root = tk.Tk()
+        
+        s.root = Tk()
+        #sw = s.root.winfo_screenwidth()#得到屏幕宽度
+        #sh = s.root.winfo_screenheight()#得到屏幕高度
+        s.root.attributes("-alpha",0) #设置窗口全透明
+        s.root.state('zoomed')
+        s.root.update()
+        usable_width  = s.root.winfo_width()
+        usable_height = s.root.winfo_height()
+        s.root.state('normal')
+        s.root.attributes("-alpha",1)
+        #s.root.update()
+        ww = 400
+        wh = 200#窗口宽高为100
+        x = (usable_width-ww)
+        y = (usable_height-wh)
+        s.root.geometry("%dx%d+%d+%d" %(ww,wh,x,y))# 窗口居中放置
+        s.root.update()
+        s.root.state('icon')
+
 
         icons = '12.ico'
         hover_text = "SysTrayIcon.py Demo" #悬浮于图标上方时的提示
@@ -224,7 +248,14 @@ class _Main:
         s.root.bind("<Unmap>", lambda event: s.Unmap() if s.root.state() == 'iconic' else False)
         s.root.protocol('WM_DELETE_WINDOW', s.exit)
         s.root.resizable(0,0)
+        
+        s.var = StringVar()
+        s.var.set('fede')
+        s.label = Label(s.root,textvariable=s.var)
+        s.label.grid(row=0,column=0)
         s.root.mainloop()
+                
+        
 
     def switch_icon(s, _sysTrayIcon, icons = '13.ico'):
         _sysTrayIcon.icon = icons
@@ -239,8 +270,71 @@ class _Main:
         s.root.destroy()
         print ('exit...')
 
+           
+
+        #frame2 = tk.Frame(s.root,width=200,height=200,bg='blue')
+        #s.root.bind('<Key>',callback2)
+        #frame2.focus_set()
+        #frame2.pack()
+   
+def onKeyboardEvent(event):
+    # 监听键盘事件
+    #print("MessageName:", event.MessageName)
+    #print("Message:", event.Message)
+    #print("Time:", event.Time)
+    #print("Window:", event.Window)
+    #print("WindowName:", event.WindowName)
+    #print("Ascii:", event.Ascii, chr(event.Ascii))
+    print(event.Key)
+    #print("KeyID:", event.KeyID)
+    #print("ScanCode:", event.ScanCode)
+    #print("Extended:", event.Extended)
+    #print("Injected:", event.Injected)
+    #print("Alt", event.Alt)
+    #print("Transition", event.Transition)
+    #print("---")
+    # 同鼠标事件监听函数的返回值
+    #label.text('event.KeyID')
+    #s.var.set(event.Key)
+    
+    #var.set(event.key)
+    
+    return True
+
+def hook1():
+    # 创建一个“钩子”管理对象
+    hm = PyHook3.HookManager()
+    # 监听所有键盘事件
+    hm.KeyDown = onKeyboardEvent
+    # 设置键盘“钩子”
+    hm.HookKeyboard()
+    # 监听所有鼠标事件
+    #hm.MouseAll = onMouseEvent
+    # 设置鼠标“钩子”
+    #hm.HookMouse()
+    # 进入循环，如不手动关闭，程序将一直处于监听状态
+    pythoncom.PumpMessages()
+
+
 
 if __name__ == '__main__':
     Main = _Main()
+    '''
+    try:
+        _thread.start_new_thread(Main.main, ())
+    except:
+        print("Error")
+    '''
+    try:
+        _thread.start_new_thread(hook1, ())
+    except:
+        print("Error")
+    
+    
     Main.main()
+    
 
+'''
+    while True:
+        pass
+'''

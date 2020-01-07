@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-12-29 19:03:13
-@LastEditTime : 2019-12-29 19:29:28
+@LastEditTime : 2019-12-30 14:45:44
 @LastEditors  : Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \MyPython\bind_ex.py
@@ -25,6 +25,7 @@ frame2 = Frame(root,width=200,height=200,bg='blue')
 frame2.bind('<Key>',callback2)
 frame2.focus_set()
 frame2.pack()
+
 
 def callback3(event):
     print('当前位置是:',event.x,event.y)
