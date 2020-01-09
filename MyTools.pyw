@@ -126,7 +126,7 @@ class MyApp(Tk):
         self.attributes("-toolwindow", 1)
         self.option_add('*Font', 'Fira 14')
         self.attributes("-topmost", -1)
-
+        self.attributes("-alpha",0)
         group = LabelFrame(self,text='软件工具集合：',padx=5,pady=5,bg='#000000',fg='#00FF00',)
         group.grid(row=0,column=0,sticky=E+W,padx=5,pady=5,)
 
@@ -160,13 +160,13 @@ class MyApp(Tk):
         sh = self.winfo_screenheight()#得到屏幕高度
         ww = self.winfo_width()
         wh = self.winfo_height()
-        x=sw-ww
+        x=sw-ww-5
         y=sh-wh
         
         #self.geometry("%dx%d+%d+%d" %(ww,wh,x,y))# 窗口居中放置
         self.geometry("+%d+%d" %(x,0))        
         self.resizable(0,0) #禁止调整窗口大小。
-        
+        self.attributes("-alpha",1)
 
   # 设置参数
   # 弹窗

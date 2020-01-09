@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import serial
 
 '''
@@ -34,7 +35,24 @@ class ComWin(Tk):
     def __init__(self):
         super().__init__()
         self.title('串口通信助手')
+        group = LabelFrame(self,)
+        group.grid(row=0,column=0)
+        self.L1=Label(group,text='端 口').grid(row=0,column=0,padx=5,pady=5,sticky=E+W)
+        self.L2=Label(group,text='波特率').grid(row=1,column=0,padx=5,pady=5,sticky=E+W)
+        self.L3=Label(group,text='检验位').grid(row=2,column=0,padx=5,pady=5,sticky=E+W)
+        self.L4=Label(group,text='数据位').grid(row=3,column=0,padx=5,pady=5,sticky=E+W)
+        self.L5=Label(group,text='停止位').grid(row=4,column=0,padx=5,pady=5,sticky=E+W)
+        comvalue1=StringVar()
+        cmb1=ttk.Combobox(group,textvariable=comvalue1)
+        cmb1['value']=('com1','com2','com3')
+        cmb1.current(1)
+        cmb1.grid(row=0,column=1,padx=5,pady=5,sticky=E+W)
 
+        def func(event):
+            print(cmb1.get())
+            print(comvalue1.get())
+            
+        cmb1.bind("<<ComboboxSelected>>",func) #等同于textvariable=cv这个变量
     def close(self):
         self.destroy()
 
