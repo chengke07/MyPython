@@ -10,7 +10,7 @@
 from tkinter import *
 from tkinter import ttk
 import _thread
-import tk2
+import serial_com
 import webbrowser
 
 # 弹窗
@@ -114,7 +114,7 @@ class MyApp(Tk):
         self.title('MyTools')
         # 程序参数/数据
 
-        self.items = ['网址收藏栏','貂蝉','王昭君','杨玉环','小美']
+        self.items = ['网址收藏栏','貂蝉','王昭君','杨玉环','串口通信助手','dr']
         self.items_v = []
         
         # 程序界面
@@ -127,8 +127,11 @@ class MyApp(Tk):
         self.option_add('*Font', 'Fira 14')
         self.attributes("-topmost", -1)
 
-        group = LabelFrame(self,text='软件工具集合：',padx=5,pady=5,bg='#000000',fg='#00FF00')
+        group = LabelFrame(self,text='软件工具集合：',padx=5,pady=5,bg='#000000',fg='#00FF00',)
         group.grid(row=0,column=0,sticky=E+W,padx=5,pady=5,)
+
+        #self.sb = Scrollbar(group)
+        #self.sb.grid(row=0,column=1,rowspan=5,sticky=N+S)
 
         self.items_v.append(IntVar())
         b1=Checkbutton(group,text=self.items[0],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB1,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
@@ -145,18 +148,26 @@ class MyApp(Tk):
         self.items_v.append(IntVar())
         b5=Checkbutton(group,text=self.items[4],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB5,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
         b5.grid(row=4,column=0,sticky=W+E,padx=0,pady=3,)
-       
+        self.items_v.append(IntVar())
+        b6=Checkbutton(group,text=self.items[5],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB6,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b6.grid(row=5,column=0,sticky=W+E,padx=0,pady=3,)
+
+
+        #sw = self.winfo_screenwidth()#得到屏幕宽度
+        #sh = self.winfo_screenheight()#得到屏幕高度
+        self.update()
         sw = self.winfo_screenwidth()#得到屏幕宽度
         sh = self.winfo_screenheight()#得到屏幕高度
-        ww = 200
-        wh =  300
-        x = (sw-ww)
-        y = 0
-    
-        self.geometry("%dx%d+%d+%d" %(ww,wh,x,y))# 窗口居中放置
-
+        ww = self.winfo_width()
+        wh = self.winfo_height()
+        x=sw-ww
+        y=sh-wh
+        
+        #self.geometry("%dx%d+%d+%d" %(ww,wh,x,y))# 窗口居中放置
+        self.geometry("+%d+%d" %(x,0))        
         self.resizable(0,0) #禁止调整窗口大小。
         
+
   # 设置参数
   # 弹窗
     def ask_userinfo(self):
@@ -172,22 +183,26 @@ class MyApp(Tk):
             self.B1.close()
             
     def checkB2(self):
-        if self.items_v[1].get()==1:
-            self.r = tk2.App()
-            
-             
-        elif self.items_v[1].get()==0:
-            self.r.close()
-            
-    def checkB3():
-        pass
-    def checkB4():
-        pass
-    def checkB5():
         pass
 
+    def checkB3(self):
+        pass
+    def checkB4(self):
+        pass
+    def checkB5(self):
+        if self.items_v[4].get()==1:
+            self.B5 = serial_com.ComWin()
+        elif self.items_v[4].get()==0:
+            self.B5.close()
+    def checkB6(self):
+        pass
+
+    def destroy(self):
+        super().destroy()
+        self.B5.close()
+        
 
 
 if __name__ == '__main__':
-  app = MyApp()
-  app.mainloop()
+    app = MyApp()
+    app.mainloop()
