@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import serial
+import serial.tools.list_ports
 
 '''
 ser=serial.Serial("/dev/ttyUSB0",9600,timeout=0.5) #使用USB连接串行口
@@ -42,17 +43,88 @@ class ComWin(Tk):
         self.L3=Label(group,text='检验位').grid(row=2,column=0,padx=5,pady=5,sticky=E+W)
         self.L4=Label(group,text='数据位').grid(row=3,column=0,padx=5,pady=5,sticky=E+W)
         self.L5=Label(group,text='停止位').grid(row=4,column=0,padx=5,pady=5,sticky=E+W)
+        
+        
+        
+
+        #COM口  下拉列表
         comvalue1=StringVar()
-        cmb1=ttk.Combobox(group,textvariable=comvalue1)
-        cmb1['value']=('com1','com2','com3')
-        cmb1.current(1)
+        cmb1=ttk.Combobox(group,textvariable=comvalue1,)
+        '''
+        port_list = list(serial.tools.list_ports.comports())
+        a=[]
+        if len(port_list) == 0:
+            print('无可用串口')
+        else:
+            for i in range(0,len(port_list)):
+                b=str(port_list[i])
+                a.append(b[0:4])
+        a.sort()
+        cmb1['value']=a
+        '''
+        cmb1['value']=('com1','com2','com3','com4','com5','com6','com7','com8')
+        cmb1.current(0)
         cmb1.grid(row=0,column=1,padx=5,pady=5,sticky=E+W)
 
-        def func(event):
-            print(cmb1.get())
-            print(comvalue1.get())
+        def cmb1func(event):
+            #print(cmb1.get()
+            comvalue1.get()
             
-        cmb1.bind("<<ComboboxSelected>>",func) #等同于textvariable=cv这个变量
+        cmb1.bind("<<ComboboxSelected>>",cmb1func) 
+
+        #波特率
+        comvalue2=StringVar()
+        cmb2=ttk.Combobox(group,textvariable=comvalue2)
+        cmb2['value']=('9600','19200','38400',)
+        cmb2.grid(row=1,column=1,padx=5,pady=5,sticky=E+W)
+        cmb2.current(0)
+        def cmb2func(event):
+            comvalue2.get()            
+        cmb2.bind("<<ComboboxSelected>>",cmb2func) 
+
+        #停止位
+        comvalue3=StringVar()
+        cmb3=ttk.Combobox(group,textvariable=comvalue3)
+        cmb3['value']=('0.5','1','2',)
+        cmb3.grid(row=2,column=1,padx=5,pady=5,sticky=E+W)
+        cmb3.current(0)
+        def cmb3func(event):
+            comvalue3.get()            
+        cmb3.bind("<<ComboboxSelected>>",cmb3func) 
+
+
+        # 打开按钮
+        btn1 = Button(group,text='打开串口')
+        self.cv = Canvas(group,width=30,height=30)
+        led=self.cv.create_oval((10,10,25,25),fill='black')
+
+        def closecom():
+            try:
+                self.ser.close()
+                btn1['text']='打开串口'
+                btn1['command']=opencom
+                self.cv.itemconfig(led,fill='black')
+            except:
+                print('error')
+
+        def opencom():
+            try:
+                self.ser=serial.Serial(cmb1.get(),9600,timeout=0.5)
+                btn1['text']='关闭串口'
+                btn1['command']=closecom
+                self.cv.itemconfig(led,fill='red')
+            except:
+                print('error')
+        
+        btn1['command']=opencom
+
+       
+        self.cv.grid(row=5,column=0)
+        btn1.grid(row=5,column=1)
+        
+
+
+
     def close(self):
         self.destroy()
 

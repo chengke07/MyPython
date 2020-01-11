@@ -182,6 +182,7 @@ class MyApp(Tk):
         elif self.items_v[0].get()==0:
             self.B1.close()
             
+            
     def checkB2(self):
         pass
 
