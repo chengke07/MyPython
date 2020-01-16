@@ -32,6 +32,7 @@ try:
 except Exception as e:
     print("---异常---：",e)
 '''
+
 class ComWin(Tk):
     def __init__(self):
         super().__init__()
@@ -82,10 +83,10 @@ class ComWin(Tk):
             comvalue2.get()            
         cmb2.bind("<<ComboboxSelected>>",cmb2func) 
 
-        #停止位
+        #校验位
         comvalue3=StringVar()
         cmb3=ttk.Combobox(group,textvariable=comvalue3)
-        cmb3['value']=('0.5','1','2',)
+        cmb3['value']=('None无','Odd偶','Even奇','Mark(=1)','Space(=0)')
         cmb3.grid(row=2,column=1,padx=5,pady=5,sticky=E+W)
         cmb3.current(0)
         def cmb3func(event):
