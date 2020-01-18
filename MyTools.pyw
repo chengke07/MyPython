@@ -8,6 +8,7 @@
 '''
 
 from tkinter import *
+from tkinter import messagebox
 from tkinter import ttk
 import _thread
 import serial_com
@@ -116,6 +117,7 @@ class MyApp(Tk):
 
         self.items = ['网址收藏栏','貂蝉','王昭君','杨玉环','串口通信助手','dr']
         self.items_v = []
+        self.overrideredirect(True)  #参数True，隐藏窗口标题栏。
         
         # 程序界面
         self.setupUI()
@@ -160,14 +162,18 @@ class MyApp(Tk):
         sh = self.winfo_screenheight()#得到屏幕高度
         ww = self.winfo_width()
         wh = self.winfo_height()
-        x=sw-ww-5
+        x=sw-ww
         y=sh-wh
         
         #self.geometry("%dx%d+%d+%d" %(ww,wh,x,y))# 窗口居中放置
         self.geometry("+%d+%d" %(x,0))        
         self.resizable(0,0) #禁止调整窗口大小。
         self.attributes("-alpha",1)
-
+        self.bind('<Alt-End>',self.End)
+        self.bind('<Alt-Up>',self.Up)
+        self.bind('<Alt-Down>',self.Down)
+        self.bind('<Alt-Left>',self.Left)
+        self.bind('<Alt-Right>',self.Right)
   # 设置参数
   # 弹窗
     def ask_userinfo(self):
@@ -181,8 +187,40 @@ class MyApp(Tk):
                         
         elif self.items_v[0].get()==0:
             self.B1.close()
-            
-            
+    def key(self,event):
+        print(event.keysym)
+    def End(self,event):
+        self.destroy()
+    def Up(self,event):
+        x = self.winfo_x()
+        y = self.winfo_y()-20
+        if y>=0:
+            self.geometry('+{}+{}'.format(x,y))  #改变窗口大小
+        self.update()
+    def Down(self,event):
+        sh = self.winfo_screenheight()#得到屏幕高度
+        wh = self.winfo_height()
+        x = self.winfo_x()
+        y = self.winfo_y()+20
+        if y<=(sh-wh+20):
+            self.geometry('+{}+{}'.format(x,y))  #改变窗口大小
+        self.update()
+    def Left(self,event):
+        x = self.winfo_x()-20
+        y = self.winfo_y()
+        if x>=-20:
+            self.geometry('+{}+{}'.format(x,y))  #改变窗口大小
+        self.update()
+    def Right(self,event):
+        sw = self.winfo_screenwidth()
+        ww = self.winfo_width()
+        x = self.winfo_x()+20
+        y = self.winfo_y()
+        if x<=sw-ww:
+            self.geometry('+{}+{}'.format(x,y))  #改变窗口大小
+        self.update()
+
+
     def checkB2(self):
         pass
 
@@ -204,6 +242,16 @@ class MyApp(Tk):
         
 
 
+#def key(event):
+#    print(event.char)
+
+
 if __name__ == '__main__':
+      
     app = MyApp()
+    #app.bind('<Key>',key)
+    a=messagebox.showinfo('提示', '请用组合键控制程序，ALT+END是退出，ALT+方向键可以移动窗口位置！！')
+    
     app.mainloop()
+    
+    
