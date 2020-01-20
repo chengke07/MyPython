@@ -13,6 +13,8 @@ from tkinter import ttk
 import _thread
 import serial_com
 import webbrowser
+import time
+
 
 # 弹窗
 class MyDialog(Toplevel):
@@ -123,35 +125,41 @@ class MyApp(Tk):
         self.setupUI()
     def setupUI(self):
         
-        self['bg'] = '#000000'
+
+        self['bg'] = '#DAA520'
         
         self.attributes("-toolwindow", 1)
-        self.option_add('*Font', 'Fira 14')
+        self.option_add('*Font', '微软雅黑 12 bold')
         self.attributes("-topmost", -1)
         self.attributes("-alpha",0)
-        group = LabelFrame(self,text='软件工具集合：',padx=5,pady=5,bg='#000000',fg='#00FF00',)
+
+        style = ttk.Style()
+        style.configure("BW.TLabelFrame",background="#0000FF",foreground="#00FF00")
+
+        #group = ttk.LabelFrame(self,text='软件工具集合：',style='BW.TLabelFrame')
+        group = LabelFrame(self,text='软件工具集合：',fg='#FF0000',bg='#DAA520',font=('微软雅黑','16','bold','italic'))
         group.grid(row=0,column=0,sticky=E+W,padx=5,pady=5,)
 
-        #self.sb = Scrollbar(group)
+        #self.sb = Scrollbar(group)  fg='#00FF00'
         #self.sb.grid(row=0,column=1,rowspan=5,sticky=N+S)
 
         self.items_v.append(IntVar())
-        b1=Checkbutton(group,text=self.items[0],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB1,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b1=Checkbutton(group,text=self.items[0],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB1,bd=3,bg='#32CD32',fg='#0000FF')
         b1.grid(row=0,column=0,sticky=E+W,padx=0,pady=3,)
         self.items_v.append(IntVar())
-        b2=Checkbutton(group,text=self.items[1],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB2,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b2=Checkbutton(group,text=self.items[1],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB2,bd=3,padx=35,bg='#32CD32',fg='#0000FF')
         b2.grid(row=1,column=0,sticky=W+E,padx=0,pady=3,)
         self.items_v.append(IntVar())
-        b3=Checkbutton(group,text=self.items[2],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB3,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b3=Checkbutton(group,text=self.items[2],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB3,bd=3,padx=35,bg='#32CD32',fg='#0000FF')
         b3.grid(row=2,column=0,sticky=W+E,padx=0,pady=3,)
         self.items_v.append(IntVar())
-        b4=Checkbutton(group,text=self.items[3],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB4,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b4=Checkbutton(group,text=self.items[3],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB4,bd=3,padx=35,bg='#32CD32',fg='#0000FF')
         b4.grid(row=3,column=0,sticky=W+E,padx=0,pady=3,)
         self.items_v.append(IntVar())
-        b5=Checkbutton(group,text=self.items[4],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB5,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b5=Checkbutton(group,text=self.items[4],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB5,bd=3,padx=35,bg='#32CD32',fg='#0000FF')
         b5.grid(row=4,column=0,sticky=W+E,padx=0,pady=3,)
         self.items_v.append(IntVar())
-        b6=Checkbutton(group,text=self.items[5],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB6,bd=3,padx=35,bg='#32CD32',fg='#FF0000')
+        b6=Checkbutton(group,text=self.items[5],variable=self.items_v[-1],indicatoron=FALSE,command = self.checkB6,bd=3,padx=35,bg='#32CD32',fg='#0000FF')
         b6.grid(row=5,column=0,sticky=W+E,padx=0,pady=3,)
 
 
@@ -174,6 +182,8 @@ class MyApp(Tk):
         self.bind('<Alt-Down>',self.Down)
         self.bind('<Alt-Left>',self.Left)
         self.bind('<Alt-Right>',self.Right)
+        group.bind('<Leave>',self.hide)
+        self.bind('<Enter>',self.show)
   # 设置参数
   # 弹窗
     def ask_userinfo(self):
@@ -219,8 +229,38 @@ class MyApp(Tk):
         if x<=sw-ww:
             self.geometry('+{}+{}'.format(x,y))  #改变窗口大小
         self.update()
-
-
+    def hide(self,event):
+        #self.state('withdrawn')
+        sw = self.winfo_screenwidth()
+        ww = self.winfo_width()
+        h = self.winfo_height()
+        x=self.winfo_x()
+        y=self.winfo_y()
+        
+        if(x==(sw-ww)):
+            self.geometry('+{}+{}'.format(sw-5,y))
+            time.sleep(0.2)
+            return
+        elif(y==0)and(x<=(sw-ww)):
+            self.geometry('+{}+{}'.format(x,-h+5))  #改变窗口大小
+            time.sleep(0.2)
+            return
+    def show(self,event):
+        #self.state('withdrawn')
+        sw = self.winfo_screenwidth()
+        ww = self.winfo_width()
+        h = self.winfo_height()
+        x=self.winfo_x()
+        y = self.winfo_y()
+        if(x>(sw-ww)):
+            self.geometry('+{}+{}'.format(sw-ww,y))
+            time.sleep(0.2)
+            return
+        elif(y<0):
+            self.geometry('+{}+{}'.format(x,y+h-5))  #改变窗口大小
+            time.sleep(0.2)
+            return
+       
     def checkB2(self):
         pass
 
@@ -250,7 +290,7 @@ if __name__ == '__main__':
       
     app = MyApp()
     #app.bind('<Key>',key)
-    a=messagebox.showinfo('提示', '请用组合键控制程序，ALT+END是退出，ALT+方向键可以移动窗口位置！！')
+    #a=messagebox.showinfo('提示', '请用组合键控制程序，ALT+END是退出，ALT+方向键可以移动窗口位置！！')
     
     app.mainloop()
     

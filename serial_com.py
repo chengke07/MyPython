@@ -37,13 +37,13 @@ class ComWin(Tk):
     def __init__(self):
         super().__init__()
         self.title('串口通信助手')
-        group = LabelFrame(self,)
-        group.grid(row=0,column=0)
-        self.L1=Label(group,text='端 口').grid(row=0,column=0,padx=5,pady=5,sticky=E+W)
-        self.L2=Label(group,text='波特率').grid(row=1,column=0,padx=5,pady=5,sticky=E+W)
-        self.L3=Label(group,text='检验位').grid(row=2,column=0,padx=5,pady=5,sticky=E+W)
-        self.L4=Label(group,text='数据位').grid(row=3,column=0,padx=5,pady=5,sticky=E+W)
-        self.L5=Label(group,text='停止位').grid(row=4,column=0,padx=5,pady=5,sticky=E+W)
+        group = ttk.LabelFrame(self,)
+        group.grid(row=0,column=0,columnspan=2)
+        self.L1=ttk.Label(group,text='端 口').grid(row=0,column=0,padx=5,pady=5,sticky=E+W)
+        self.L2=ttk.Label(group,text='波特率').grid(row=1,column=0,padx=5,pady=5,sticky=E+W)
+        self.L3=ttk.Label(group,text='检验位').grid(row=2,column=0,padx=5,pady=5,sticky=E+W)
+        self.L4=ttk.Label(group,text='数据位').grid(row=3,column=0,padx=5,pady=5,sticky=E+W)
+        self.L5=ttk.Label(group,text='停止位').grid(row=4,column=0,padx=5,pady=5,sticky=E+W)
         
         
         
@@ -92,10 +92,28 @@ class ComWin(Tk):
         def cmb3func(event):
             comvalue3.get()            
         cmb3.bind("<<ComboboxSelected>>",cmb3func) 
+#数据位
+        comvalue4=StringVar()
+        cmb4=ttk.Combobox(group,textvariable=comvalue4)
+        cmb4['value']=('8','7','6','5')
+        cmb4.grid(row=3,column=1,padx=5,pady=5,sticky=E+W)
+        cmb4.current(0)
+        def cmb4func(event):
+            comvalue4.get()            
+        cmb4.bind("<<ComboboxSelected>>",cmb4func)
 
+#停止位
+        comvalue5=StringVar()
+        cmb5=ttk.Combobox(group,textvariable=comvalue5)
+        cmb5['value']=('1','1.5','2')
+        cmb5.grid(row=4,column=1,padx=5,pady=5,sticky=E+W)
+        cmb5.current(0)
+        def cmb5func(event):
+            comvalue5.get()            
+        cmb5.bind("<<ComboboxSelected>>",cmb5func)
 
         # 打开按钮
-        btn1 = Button(group,text='打开串口')
+        btn1 = ttk.Button(group,text='打开串口')
         self.cv = Canvas(group,width=30,height=30)
         led=self.cv.create_oval((10,10,25,25),fill='black')
 
@@ -118,11 +136,22 @@ class ComWin(Tk):
                 print('error')
         
         btn1['command']=opencom
-
-       
         self.cv.grid(row=5,column=0)
         btn1.grid(row=5,column=1)
-        
+
+
+        btn2 = ttk.Button(self,text='清空接受区')
+        btn2.grid(row=1,column=0,sticky=W+E,padx=5,pady=5)
+        LB1 = ttk.Label(self,text='接受区',relief='ridge',borderwidth=2)
+        LB1.grid(row=1,column=1,sticky=W+E)
+        btn3 = ttk.Button(self,text='停止显示')
+        btn3.grid(row=2,column=0,sticky=W+E,padx=5,pady=5)
+
+
+        ckb1 = ttk.Checkbutton(self,text='自动清空')
+        ckb1.grid(row=3,column=0,sticky=W)
+        ckb2 = ttk.Checkbutton(self,text='十六进制显示')
+        ckb2.grid(row=4,column=0,sticky=W)
 
 
 
