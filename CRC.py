@@ -1,0 +1,10 @@
+
+
+a=[0x00,0x52,0x30,0x03]
+sum=0
+for i in a:
+    sum+=i
+    sum=sum&0xff
+
+print('0X%X\n' % sum)
+

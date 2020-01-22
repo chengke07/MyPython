@@ -10,7 +10,7 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-import _thread
+import threading,queue
 import serial_com
 import webbrowser
 import time
@@ -35,6 +35,7 @@ class MyDialog(Toplevel):
 class Html_Page(Toplevel):
     def __init__(self):
         super().__init__()
+        
         self.title('网址收藏栏')
         # 弹窗界面
         
@@ -113,6 +114,7 @@ class Html_Page(Toplevel):
 class MyApp(Tk):
     def __init__(self):
         super().__init__()
+        self.notify_queue = queue.Queue()
         #self.pack() # 若继承 tk.Frame ，此句必须有！
         self.title('MyTools')
         # 程序参数/数据
@@ -184,12 +186,29 @@ class MyApp(Tk):
         self.bind('<Alt-Right>',self.Right)
         group.bind('<Leave>',self.hide)
         self.bind('<Enter>',self.show)
+
+
+        self.B5=None
+
   # 设置参数
   # 弹窗
     def ask_userinfo(self):
         inputDialog = MyDialog()
         self.wait_window(inputDialog) # 这一句很重要！！！
         #return inputDialog.userinfo   
+    def process_msg(self):
+        self.master.after(400,self.process_msg)
+        while not self.notify_queue.empty():
+            try:
+                msg = self.notify_queue.get()
+                if msg[0] == 1:
+                    self.gress_bar.quit()
+
+            except queue.Empty:
+                pass
+
+
+
     def checkB1(self):
         if self.items_v[0].get()==1:
             self.B1 = Html_Page()
@@ -271,10 +290,21 @@ class MyApp(Tk):
     def checkB5(self):
         if self.items_v[4].get()==1:
             self.B5 = serial_com.ComWin()
+            self.wait_window(self.B5) # 这一句很重要！！！
+                       
         elif self.items_v[4].get()==0:
             self.B5.close()
+
+      
+
     def checkB6(self):
         pass
+    def comstart(self):
+        self.B5 = serial_com.ComWin()
+        self.wait_window(self.B5) # 这一句很重要！！！
+        #self.B5.mainloop()
+        
+
 
     def destroy(self):
         super().destroy()

@@ -8,7 +8,7 @@
 '''
 
 import pythoncom
-import pyHook
+import pyHook3
 import _thread
 
 def onMouseEvent(event):
